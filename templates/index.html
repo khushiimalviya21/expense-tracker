@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+     <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(120deg, #f0f4f8, #e0f2f1);
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    form, .total-section {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    label {
+        font-weight: 600;
+        color: #34495e;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #3b82f6;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #2563eb;
+    }
+
+    ul#expense-list {
+        list-style-type: none;
+        padding: 0;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    ul#expense-list li {
+        background: #f9fafb;
+        border-left: 5px solid #3b82f6;
+        margin-bottom: 10px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    #total-output {
+        text-align: center;
+        color: #10b981;
+        font-size: 1.25rem;
+        margin-top: 10px;
+    }
+</style>
+
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+
+    <form id="expense-form">
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id" required><br><br>
+
+        <label for="desc">Description:</label>
+        <input type="text" id="desc" name="desc" required><br><br>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required><br><br>
+
+        <label for="month">Month:</label>
+        <input type="text" id="month" name="month" required><br><br>
+
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <h2>All Expenses:</h2>
+    <ul id="expense-list"></ul>
+
+    <h2>Get Monthly Total</h2>
+    <label for="search-id">Enter ID:</label>
+    <input type="number" id="search-id">
+    <label for="search-month">Enter Month:</label>
+    <input type="text" id="search-month">
+    <button onclick="getMonthlyTotal()">Get Total</button>
+
+    <h3 id="total-output"></h3>
+
+    <script>
+        let expenses = [];
+
+        document.getElementById('expense-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const id = parseInt(document.getElementById('id').value);
+            const desc = document.getElementById('desc').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const month = document.getElementById('month').value.toLowerCase();
+
+            const expense = { id, desc, amount, month };
+            expenses.push(expense);
+
+            displayExpenses();
+
+            // Clear the form
+            document.getElementById('expense-form').reset();
+        });
+
+        function displayExpenses() {
+            const list = document.getElementById('expense-list');
+            list.innerHTML = '';
+            expenses.forEach(exp => {
+                const item = document.createElement('li');
+                item.textContent = `ID: ${exp.id}, Description: ${exp.desc}, Amount: ₹${exp.amount}, Month: ${exp.month}`;
+                list.appendChild(item);
+            });
+        }
+
+        function getMonthlyTotal() {
+            const searchId = parseInt(document.getElementById('search-id').value);
+            const searchMonth = document.getElementById('search-month').value.toLowerCase();
+
+            const total = expenses
+                .filter(exp => exp.id === searchId && exp.month === searchMonth)
+                .reduce((sum, exp) => sum + exp.amount, 0);
+
+            document.getElementById('total-output').textContent = 
+                `Total expense for ID ${searchId} in ${searchMonth.charAt(0).toUpperCase() + searchMonth.slice(1)}: ₹${total}`;
+        }
+    </script>
+</body>
+</html>
