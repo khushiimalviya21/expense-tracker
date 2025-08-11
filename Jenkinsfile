@@ -1,64 +1,70 @@
 pipeline {
     agent any
-    
+
     environment {
-        ACR_NAME = "khushiacr2025"                 // your ACR name
-        IMAGE_NAME = "expense-tracker-app"
-        RESOURCE_GROUP = "expense-rg"
-        AKS_CLUSTER_NAME = "khushi-aks"
-        AZURE_CREDENTIALS_ID = "azure-sp"          // your Azure credentials ID in Jenkins
-        ACR_CREDENTIALS_ID = "acr-creds"            // your ACR credentials ID in Jenkins
-        DOCKER_IMAGE_TAG = "${env.BUILD_NUMBER}"  // tag image with build number
+        ACR_NAME = 'youracrname' // without .azurecr.io
+        IMAGE_NAME = 'expense-tracker'
+        IMAGE_TAG = 'latest'
+        K8S_NAMESPACE = 'default'
+        SUBSCRIPTION_ID = 'fc6f7b5a-00d0-4ea1-b48a-2ebd00c943df'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
+                // If public repo
                 git branch: 'main', url: 'https://github.com/khushiimalviya21/expense-tracker.git'
+
+                // If private repo, uncomment below & comment above
+                // git credentialsId: 'github-creds', url: 'https://github.com/khushiimalviya21/expense-tracker.git', branch: 'main'
             }
         }
-        
-        stage('Build Docker Image') {
+
+        stage('Azure Login') {
             steps {
-                script {
-                    docker.build("${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
-                }
-            }
-        }
-        
-        stage('Login to ACR') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${ACR_CREDENTIALS_ID}", passwordVariable: 'ACR_PASS', usernameVariable: 'ACR_USER')]) {
-                    sh "docker login ${ACR_NAME}.azurecr.io -u $ACR_USER -p $ACR_PASS"
-                }
-            }
-        }
-        
-        stage('Push Image to ACR') {
-            steps {
-                sh "docker push ${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-            }
-        }
-        
-        stage('Deploy to AKS') {
-            steps {
-                withCredentials([azureServicePrincipal(credentialsId: "${AZURE_CREDENTIALS_ID}")]) {
+                withCredentials([string(credentialsId: 'azure-sp-creds', variable: 'AZURE_SP_JSON')]) {
                     sh '''
-                    az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-                    az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${AKS_CLUSTER_NAME} --overwrite-existing
-                    kubectl set image deployment/expense-tracker-deployment expense-tracker=${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        echo "$AZURE_SP_JSON" > sp.json
+                        CLIENT_ID=$(jq -r .clientId sp.json)
+                        CLIENT_SECRET=$(jq -r .clientSecret sp.json)
+                        TENANT_ID=$(jq -r .tenantId sp.json)
+
+                        az login --service-principal \
+                            -u $CLIENT_ID \
+                            -p $CLIENT_SECRET \
+                            --tenant $TENANT_ID
+
+                        az account set --subscription $SUBSCRIPTION_ID
                     '''
                 }
             }
         }
-    }
-    
-    post {
-        success {
-            echo 'Deployment succeeded!'
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG .
+                '''
+            }
         }
-        failure {
-            echo 'Deployment failed!'
+
+        stage('Push to ACR') {
+            steps {
+                sh '''
+                    az acr login --name $ACR_NAME
+                    docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG
+                '''
+            }
+        }
+
+        stage('Deploy to AKS') {
+            steps {
+                sh '''
+                    az aks get-credentials --resource-group expense-rg --name khushiaks --overwrite-existing
+                    kubectl apply -f deployment.yaml -n $K8S_NAMESPACE
+                    kubectl apply -f service.yaml -n $K8S_NAMESPACE
+                '''
+            }
         }
     }
 }
