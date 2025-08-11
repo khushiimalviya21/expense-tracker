@@ -13,10 +13,10 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // If public repo
-                git branch: 'main', url: 'https://github.com/khushiimalviya21/expense-tracker.git'
+                // git branch: 'main', url: 'https://github.com/khushiimalviya21/expense-tracker.git'
 
                 // If private repo, uncomment below & comment above
-                // git credentialsId: 'github-creds', url: 'https://github.com/khushiimalviya21/expense-tracker.git', branch: 'main'
+                git credentialsId: 'git-creds', url: 'https://github.com/khushiimalviya21/expense-tracker.git', branch: 'main'
             }
         }
 
