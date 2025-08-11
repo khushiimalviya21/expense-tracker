@@ -23,7 +23,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/khushiimalviya21/expense-tracker.git', credentialsId: "${GIT_CREDENTIALS_ID}"
+                git branch: 'main', url: 'https://github.com/khushiimalviya21/expense-tracker.git', credentialsId: "${GIT_CREDENTIALS_ID}"
             }
         }
 
