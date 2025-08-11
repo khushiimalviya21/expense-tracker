@@ -25,9 +25,10 @@ pipeline {
                 withCredentials([string(credentialsId: 'azure-sp-creds', variable: 'AZURE_SP_JSON')]) {
                     sh '''
                         echo "$AZURE_SP_JSON" > sp.json
-                        CLIENT_ID=$(jq -r .clientId sp.json)
-                        CLIENT_SECRET=$(jq -r .clientSecret sp.json)
-                        TENANT_ID=$(jq -r .tenantId sp.json)
+                        CLIENT_ID=$(jq -r .appId sp.json)
+                        CLIENT_SECRET=$(jq -r .password sp.json)
+                        TENANT_ID=$(jq -r .tenant sp.json)
+
 
                         az login --service-principal \
                             -u $CLIENT_ID \
