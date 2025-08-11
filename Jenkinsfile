@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ACR_NAME = 'youracrname' // without .azurecr.io
+        ACR_NAME = 'khushiacr2025' // without .azurecr.io
         IMAGE_NAME = 'expense-tracker'
         IMAGE_TAG = 'latest'
         K8S_NAMESPACE = 'default'
