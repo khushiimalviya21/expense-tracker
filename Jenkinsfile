@@ -62,8 +62,8 @@ pipeline {
             steps {
                 sh '''
                     az aks get-credentials --resource-group expense-rg --name khushiaks --overwrite-existing
-                    kubectl apply -f deployment.yaml -n $K8S_NAMESPACE
-                    kubectl apply -f service.yaml -n $K8S_NAMESPACE
+                    kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
+                    kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
                 '''
             }
         }
