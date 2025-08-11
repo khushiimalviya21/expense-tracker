@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         ACR_NAME = 'khushiacr2025' // without .azurecr.io
-        IMAGE_NAME = 'expense-tracker'
+        IMAGE_NAME = 'expense-tracker-app'
         IMAGE_TAG = 'latest'
         K8S_NAMESPACE = 'default'
         SUBSCRIPTION_ID = 'fc6f7b5a-00d0-4ea1-b48a-2ebd00c943df'
