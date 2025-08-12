@@ -20,22 +20,3 @@ spec:
         - containerPort: 8000
 
         
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: expense-tracker-deployment
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: expense-tracker
-#   template:
-#     metadata:
-#       labels:
-#         app: expense-tracker
-#     spec:
-#       containers:
-#       - name: expense-tracker
-#         image: khushiacr2025.azurecr.io/expense-tracker-app:latest
-#         ports:
-#         - containerPort: 8000
