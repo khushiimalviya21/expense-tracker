@@ -6,7 +6,7 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_expense-rg_khushiaks_eastus2
 spec:
   type: LoadBalancer
-  loadBalancerIP: <your-static-ip-address>  # put the IP you got above here
+  loadBalancerIP: 128.24.89.26 # put the IP you got above here
   selector:
     app: expense-tracker
   ports:
