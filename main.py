@@ -18,7 +18,7 @@ class Expense(BaseModel):
     user_id: int
     title: str
     amount: float
-    date: Optional[datetime] = None  
+    date: Optional[datetime] = None  # Will accept a date from frontend
 
 # Templates directory
 templates = Jinja2Templates(directory="templates")
@@ -39,8 +39,16 @@ def read_root(request: Request):
 
 # Add new expense
 @app.post("/expenses")
-def add_expense(expense: Expense):
-    expenses.append(expense)
+async def add_expense(expense: Expense):
+    if not expense.date:
+        expense.date = datetime.now()
+    query = expenses_table.insert().values(
+        user_id=expense.user_id,
+        title=expense.title,
+        amount=expense.amount,
+        date=expense.date
+    )
+    await database.execute(query)
     return {"message": "Expense added"}
 
 # Get all expenses
@@ -59,13 +67,16 @@ async def delete_expense(expense_id: int):
 
 # Get monthly total for a user
 @app.get("/expenses/summary/{user_id}")
-def get_monthly_total(user_id: int):
-    now = datetime.now()
+async def get_monthly_total(user_id: int, month: Optional[int] = None, year: Optional[int] = None):
+    query = expenses_table.select().where(expenses_table.c.user_id == user_id)
+    user_expenses = await database.fetch_all(query)
     total = 0.0
 
-    for e in expenses:
-        if e.id == user_id and e.date.month == now.month and e.date.year == now.year:
-            total += e.amount
+    for e in user_expenses:
+        e_month = e['date'].month
+        e_year = e['date'].year
+        if (month is None or month == e_month) and (year is None or year == e_year):
+            total += e['amount']
 
     return {
         "user_id": user_id,
