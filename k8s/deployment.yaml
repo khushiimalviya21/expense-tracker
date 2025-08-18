@@ -14,6 +14,9 @@ spec:
     spec:
       containers:
       - name: expense-tracker
-        image: khushiacr2025.azurecr.io/expense-tracker-app:latest
+        image: __IMAGE__               # Jenkins will replace this dynamically
+        imagePullPolicy: Always        # Always pull the new image
         ports:
         - containerPort: 8000
+
+        
