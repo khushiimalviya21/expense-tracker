@@ -1,0 +1,21 @@
+ venv/
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite database (if you don't want it in GitHub)
+expenses.db
+
+# Logs
+*.log
+
+# IDE/editor settings (optional)
+.vscode/
+.idea/
