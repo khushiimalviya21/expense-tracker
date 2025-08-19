@@ -11,13 +11,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-<<<<<<< HEAD
       targetPort: 8000
-=======
-      targetPort: 8000
-
-
-
-
-
-      
