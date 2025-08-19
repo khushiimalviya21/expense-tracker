@@ -19,8 +19,9 @@ class Expense(BaseModel):
     date: Optional[datetime] = None  # Will accept a date from frontend
 
 # Jinja2 Templates directory
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
 
 
 # Serve the HTML form
@@ -68,3 +69,4 @@ def get_monthly_total(user_id: int, month: Optional[int] = None, year: Optional[
         "year": year if year else "all",
         "total": total
     }
+
