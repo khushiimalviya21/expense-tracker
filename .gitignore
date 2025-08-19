@@ -5,6 +5,3 @@ __pycache__/
 terraform.tfstate
 terraform.tfstate.backup
 *.log
-terraform.tfstate
-terraform.tfstate.backup
-.terraform/

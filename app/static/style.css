@@ -1,4 +1,4 @@
-body {
+ body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(120deg, #f0f4f8, #e0f2f1);
         margin: 0;
@@ -45,6 +45,7 @@ body {
         cursor: pointer;
         width: 100%;
         transition: background-color 0.3s ease;
+        margin-top: 5px;
     }
 
     button:hover {
@@ -75,7 +76,8 @@ body {
         font-size: 1.25rem;
         margin-top: 10px;
     }
+
     input[type="month"] {
-    margin-top: 10px;
-    margin-bottom: 16px;
-}
+        margin-top: 10px;
+        margin-bottom: 16px;
+    }

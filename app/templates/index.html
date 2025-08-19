@@ -2,29 +2,30 @@
 <html>
 <head>
     <title>Expense Tracker</title>
-     <link rel="stylesheet" href="/static/style.css">
-     
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>Expense Tracker</h1>
 
     <form id="expense-form">
-        <input type="number" id="id" placeholder="User ID" required>
+        <input type="number" id="user_id" placeholder="User ID" required>
         <input type="text" id="desc" placeholder="Description" required>
         <input type="number" id="amount" placeholder="Amount" required step="0.01">
-        <input type="month" id="date" placeholder="Month" required>
-        <button type="submit">Add Expense</button>
+        <input type="month" id="date" placeholder="Month">
+        <button type="submit">Add / Update Expense</button>
     </form>
 
     <h2>All Expenses</h2>
     <ul id="expense-list"></ul>
 
     <h2>Monthly Total</h2>
-    <input type="number" id="search-id" placeholder="User ID">
-    <input type="month" id="search-month">
-    <button onclick="getMonthlyTotal()">Get Total</button>
-    <p id="total-output"></p>
-      <script src="/static/script.js"></script>
-    
+    <div class="total-section">
+        <input type="number" id="search-id" placeholder="User ID">
+        <input type="month" id="search-month">
+        <button type="button" onclick="getMonthlyTotal()">Get Total</button>
+        <p id="total-output"></p>
+    </div>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>
