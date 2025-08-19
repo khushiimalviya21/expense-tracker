@@ -1,0 +1,81 @@
+body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(120deg, #f0f4f8, #e0f2f1);
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    form, .total-section {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    label {
+        font-weight: 600;
+        color: #34495e;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #3b82f6;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #2563eb;
+    }
+
+    ul#expense-list {
+        list-style-type: none;
+        padding: 0;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    ul#expense-list li {
+        background: #f9fafb;
+        border-left: 5px solid #3b82f6;
+        margin-bottom: 10px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    #total-output {
+        text-align: center;
+        color: #10b981;
+        font-size: 1.25rem;
+        margin-top: 10px;
+    }
+    input[type="month"] {
+    margin-top: 10px;
+    margin-bottom: 16px;
+}

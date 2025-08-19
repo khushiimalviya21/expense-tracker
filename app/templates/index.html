@@ -2,100 +2,14 @@
 <html>
 <head>
     <title>Expense Tracker</title>
-     <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(120deg, #f0f4f8, #e0f2f1);
-        margin: 0;
-        padding: 0;
-    }
-
-    h1, h2, h3 {
-        text-align: center;
-        color: #2c3e50;
-    }
-
-    form, .total-section {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #ffffff;
-        padding: 25px 30px;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    label {
-        font-weight: 600;
-        color: #34495e;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 6px;
-        margin-bottom: 16px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        box-sizing: border-box;
-    }
-
-    button {
-        background-color: #3b82f6;
-        color: white;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: #2563eb;
-    }
-
-    ul#expense-list {
-        list-style-type: none;
-        padding: 0;
-        max-width: 600px;
-        margin: 20px auto;
-    }
-
-    ul#expense-list li {
-        background: #f9fafb;
-        border-left: 5px solid #3b82f6;
-        margin-bottom: 10px;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        color: #2c3e50;
-        font-size: 1rem;
-    }
-
-    #total-output {
-        text-align: center;
-        color: #10b981;
-        font-size: 1.25rem;
-        margin-top: 10px;
-    }
-    input[type="month"] {
-    margin-top: 10px;
-    margin-bottom: 16px;
-}
-
-</style>
-
-
+     <link rel="stylesheet" href="/static/style.css">
+     
 </head>
-
 <body>
     <h1>Expense Tracker</h1>
 
-    <!-- Updated form: now uses user_id instead of id -->
     <form id="expense-form">
-        <input type="number" id="user_id" placeholder="User ID" required>
+        <input type="number" id="id" placeholder="User ID" required>
         <input type="text" id="desc" placeholder="Description" required>
         <input type="number" id="amount" placeholder="Amount" required step="0.01">
         <input type="month" id="date" placeholder="Month" required>
@@ -110,85 +24,7 @@
     <input type="month" id="search-month">
     <button onclick="getMonthlyTotal()">Get Total</button>
     <p id="total-output"></p>
-
-    <script>
-        // Fetch all expenses from backend and display
-        async function fetchExpenses() {
-            try {
-                const response = await fetch('/expenses');
-                const data = await response.json();
-                displayExpenses(data);
-            } catch (error) {
-                console.error('Error fetching expenses:', error);
-            }
-        }
-
-        // Handle adding a new expense
-        document.getElementById('expense-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const user_id = parseInt(document.getElementById('user_id').value);
-            const title = document.getElementById('desc').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const dateValue = document.getElementById('date').value;
-
-            // Convert month input to full date (first day of month)
-            const date = new Date(dateValue + '-01');
-
-            const expense = { user_id, title, amount, date };
-
-            try {
-                const response = await fetch('/expenses', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(expense)
-                });
-                await response.json();
-                fetchExpenses();  // Refresh list
-                document.getElementById('expense-form').reset();
-            } catch (error) {
-                console.error('Error adding expense:', error);
-            }
-        });
-
-        // Display expenses in the browser
-        function displayExpenses(expenses) {
-            const list = document.getElementById('expense-list');
-            list.innerHTML = '';
-            expenses.forEach(exp => {
-                const item = document.createElement('li');
-                const expDate = new Date(exp.date);
-                item.textContent = `User ID: ${exp.user_id}, Description: ${exp.title}, Amount: ₹${exp.amount}, Date: ${expDate.getMonth()+1}/${expDate.getFullYear()}`;
-                list.appendChild(item);
-            });
-        }
-
-        // Get monthly total from backend
-        async function getMonthlyTotal() {
-            const searchId = parseInt(document.getElementById('search-id').value);
-            const monthInput = document.getElementById('search-month').value;
-
-            let month, year;
-            if (monthInput) {
-                const parts = monthInput.split('-');
-                year = parseInt(parts[0]);
-                month = parseInt(parts[1]);
-            }
-
-            try {
-                const url = `/expenses/summary/${searchId}` + 
-                            (month ? `?month=${month}&year=${year}` : '');
-                const response = await fetch(url);
-                const data = await response.json();
-                document.getElementById('total-output').textContent =
-                    `Total expense for User ID ${data.user_id} in ${data.month}/${data.year}: ₹${data.total}`;
-            } catch (error) {
-                console.error('Error fetching monthly total:', error);
-            }
-        }
-
-        // Initial load
-        fetchExpenses();
-    </script>
+      <script src="/static/script.js"></script>
+    
 </body>
 </html>
