@@ -1,6 +1,6 @@
 let editingId = null;
 
-// Fetch all expenses and display
+
 async function fetchExpenses() {
     try {
         const response = await fetch('/expenses');
@@ -11,7 +11,7 @@ async function fetchExpenses() {
     }
 }
 
-// Handle adding or editing an expense
+
 document.getElementById('expense-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
@@ -24,7 +24,7 @@ document.getElementById('expense-form').addEventListener('submit', async functio
 
     try {
         if (editingId) {
-            // Update expense
+          
             await fetch(`/expenses/${editingId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -32,7 +32,7 @@ document.getElementById('expense-form').addEventListener('submit', async functio
             });
             editingId = null;
         } else {
-            // Add new expense
+          
             await fetch('/expenses', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,7 +46,7 @@ document.getElementById('expense-form').addEventListener('submit', async functio
     }
 });
 
-// Display expenses
+
 function displayExpenses(expenses) {
     const list = document.getElementById('expense-list');
     list.innerHTML = '';
@@ -63,7 +63,7 @@ function displayExpenses(expenses) {
     });
 }
 
-// Delete expense
+
 async function deleteExpense(id) {
     try {
         await fetch(`/expenses/${id}`, { method: 'DELETE' });
@@ -73,7 +73,7 @@ async function deleteExpense(id) {
     }
 }
 
-// Edit expense
+
 function editExpense(id, user_id, title, amount, dateValue) {
     editingId = id;
     document.getElementById('user_id').value = user_id;
@@ -82,29 +82,52 @@ function editExpense(id, user_id, title, amount, dateValue) {
     document.getElementById('date').value = dateValue;
 }
 
-// Get monthly total
-async function getMonthlyTotal() {
-    const searchId = parseInt(document.getElementById('search-id').value);
-    const monthInput = document.getElementById('search-month').value;
 
-    let month, year;
+async function getMonthlyTotal() {
+    const userId = document.getElementById("search-id").value;
+    const monthInput = document.getElementById("search-month").value;
+
+    if (!userId) {
+        document.getElementById("total-output").textContent = "Please enter a User ID.";
+        return;
+    }
+
+    let month = null, year = null;
     if (monthInput) {
-        const parts = monthInput.split('-');
+        const parts = monthInput.split("-");
         year = parseInt(parts[0]);
         month = parseInt(parts[1]);
     }
 
     try {
-        const url = `/expenses/summary/${searchId}` + 
-                    (month ? `?month=${month}&year=${year}` : '');
+        
+        let url = `/expenses/summary/${userId}`;
+        if (month && year) {
+            url += `?month=${month}&year=${year}`;
+        }
+
         const response = await fetch(url);
+
+        const resultDiv = document.getElementById("total-output");
+
+        if (response.status === 404) {
+            resultDiv.textContent = `User ID ${userId} does not exist.`;
+            return;
+        }
+
+        if (!response.ok) {
+            resultDiv.textContent = "Something went wrong.";
+            return;
+        }
+
         const data = await response.json();
-        document.getElementById('total-output').textContent =
-            `Total expense for User ID ${data.user_id} in ${data.month}/${data.year}: ₹${data.total}`;
+
+        resultDiv.textContent = `Total expense for User ID ${data.user_id} in ${data.month}/${data.year}: ₹${data.total}`;
     } catch (error) {
-        console.error('Error fetching monthly total:', error);
+        console.error("Error fetching data:", error);
+        document.getElementById("total-output").textContent = "Something went wrong.";
     }
 }
 
-// Initial load
+
 fetchExpenses();

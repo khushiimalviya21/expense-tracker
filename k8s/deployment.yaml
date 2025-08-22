@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: expense-tracker
-        image: __IMAGE__               # Jenkins will replace this dynamically
-        imagePullPolicy: Always        # Always pull the new image
+        image: __IMAGE__               
+        imagePullPolicy: Always        
         ports:
         - containerPort: 8000
 
