@@ -58,7 +58,7 @@ pipeline {
                 sh '''
                     az aks get-credentials --resource-group expense-rg --name khushiaks --overwrite-existing
 
-                    // kubectl apply -f k8s/pvc.yaml -n $K8S_NAMESPACE
+                    
                     kubectl get pvc expense-tracker-pvc -n $K8S_NAMESPACE || kubectl apply -f k8s/pvc.yaml -n $K8S_NAMESPACE
 
 
