@@ -58,7 +58,7 @@ pipeline {
                 sh '''
                     az aks get-credentials --resource-group expense-rg --name khushiaks --overwrite-existing
 
-                  
+                    kubectl apply -f k8s/pvc.yaml -n $K8S_NAMESPACE
 
                     sed "s|__IMAGE__|$ACR_NAME.azurecr.io/$IMAGE_NAME:$IMAGE_TAG|" k8s/deployment.yaml > k8s/deployment-updated.yaml
 
