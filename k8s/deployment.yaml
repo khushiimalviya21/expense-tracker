@@ -18,5 +18,10 @@ spec:
         imagePullPolicy: Always        
         ports:
         - containerPort: 8000
-
-        
+        volumeMounts:
+        - name: expense-storage
+          mountPath: /app             
+      volumes:
+      - name: expense-storage
+        persistentVolumeClaim:
+          claimName: expense-tracker-pvc
