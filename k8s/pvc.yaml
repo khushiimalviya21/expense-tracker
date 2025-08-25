@@ -1,11 +1,41 @@
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: expense-tracker-pvc 
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi   # 1 Gi is enough for testing
+#   storageClassName: managed-csi
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: expense-tracker-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: managed-csi
+  csi:
+    driver: disk.csi.azure.com
+    fsType: ext4
+    volumeHandle: expense-tracker-disk
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: expense-tracker-pvc 
+  name: expense-tracker-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi   # 1 Gi is enough for testing
+      storage: 1Gi
   storageClassName: managed-csi
+  volumeName: expense-tracker-pv
+
