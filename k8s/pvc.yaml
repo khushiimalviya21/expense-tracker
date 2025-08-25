@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: default    # Azure Disk storage class
+  storageClassName: managed-csi   # Azure default managed disk storage class
   resources:
     requests:
       storage: 5Gi
