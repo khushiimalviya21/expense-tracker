@@ -17,26 +17,46 @@ pipeline {
             }
         }
 
+        // stage('Azure Login') {
+        //     steps {
+        //         withCredentials([string(credentialsId: 'azure-sp-creds', variable: 'AZURE_SP_JSON')]) {
+        //             sh '''
+        //                 echo "$AZURE_SP_JSON" > sp.json
+        //                 CLIENT_ID=$(jq -r .appId sp.json)
+        //                 CLIENT_SECRET=$(jq -r .password sp.json)
+        //                 TENANT_ID=$(jq -r .tenant sp.json)
+
+        //                 az login --service-principal \
+        //                     -u $CLIENT_ID \
+        //                     -p $CLIENT_SECRET \
+        //                     --tenant $TENANT_ID
+
+        //                 az account set --subscription $SUBSCRIPTION_ID
+        //             '''
+        //         }
+        //     }
+        // }
+
         stage('Azure Login') {
-            steps {
-                withCredentials([string(credentialsId: 'azure-sp-creds', variable: 'AZURE_SP_JSON')]) {
-                    sh '''
-                        echo "$AZURE_SP_JSON" > sp.json
-                        CLIENT_ID=$(jq -r .appId sp.json)
-                        CLIENT_SECRET=$(jq -r .password sp.json)
-                        TENANT_ID=$(jq -r .tenant sp.json)
+    steps {
+        withCredentials([string(credentialsId: 'azure-sp-creds', variable: 'AZURE_SP_JSON')]) {
+            sh '''
+                echo "$AZURE_SP_JSON" > sp.json
+                CLIENT_ID=$(jq -r .clientId sp.json)
+                CLIENT_SECRET=$(jq -r .clientSecret sp.json)
+                TENANT_ID=$(jq -r .tenantId sp.json)
 
-                        az login --service-principal \
-                            -u $CLIENT_ID \
-                            -p $CLIENT_SECRET \
-                            --tenant $TENANT_ID
+                az login --service-principal \
+                    --username $CLIENT_ID \
+                    --password $CLIENT_SECRET \
+                    --tenant $TENANT_ID
 
-                        az account set --subscription $SUBSCRIPTION_ID
-                    '''
-                }
-            }
+                az account set --subscription $SUBSCRIPTION_ID
+            '''
         }
-
+    }
+}
+        
         stage('Build Docker Image') {
             steps {
                 sh '''
